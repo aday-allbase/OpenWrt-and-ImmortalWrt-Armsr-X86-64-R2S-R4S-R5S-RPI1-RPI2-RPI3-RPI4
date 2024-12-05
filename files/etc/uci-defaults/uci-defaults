@@ -1,0 +1,106 @@
+#!/bin/sh
+
+# ENV
+exec > /root/firs-setup.log 2>&1
+
+msg() {
+    local DATE=$(date '+%d %B %Y %T')
+    echo "[ INFO FIRST SETUP ] $1"
+    logger -p "notice" "[ INFO FIRST SETUP ] $1"
+}
+
+# Set hostname and Timezone to Asia/Jakarta
+msg "Setup NTP Server and Time Zone to Asia/Jakarta"
+uci set system.@system[0].hostname='RTA-WRT'
+uci set system.@system[0].timezone='WIB-7'
+uci set system.@system[0].zonename='Asia/Jakarta'
+uci -q delete system.ntp.server
+uci add_list system.ntp.server="pool.ntp.org"
+uci add_list system.ntp.server="id.pool.ntp.org"
+uci add_list system.ntp.server="time.google.com"
+uci commit system
+
+# configure wan interface
+msg "Setup WAN and LAN Interface"
+uci set network.lan.ipaddr="192.168.1.1"
+uci set network.lan.delegate='0'
+uci set network.tethering=interface
+uci set network.tethering.proto='dhcp'
+uci set network.tethering.device='usb0'
+uci -q delete network.wan6
+uci commit network
+uci set firewall.@zone[1].network='tethering'
+uci commit firewall
+
+# configure ipv6
+uci -q delete dhcp.lan.dhcpv6
+uci -q delete dhcp.lan.ra
+uci -q delete dhcp.lan.ndp
+uci -q delete dhcp.lan.ra_slaac
+uci -q delete dhcp.lan.ra_flags
+uci -q delete dhcp.lan.max_preferred_lifetime
+uci -q delete dhcp.lan.max_valid_lifetime
+uci commit dhcp
+uci set network.lan.delegate='0'
+uci del network.lan.ip6assign
+uci commit network
+
+# Step 1: Configure Password Login OpenWrt
+msg "Step 1: Configure Password Login OpenWrt"
+(echo "root"; sleep 1; echo "root") | passwd > /dev/null
+
+
+# Step 2: Add Custom Repo and Disable opkg signature check
+msg "Step 2: Add Custom Repo and Disable opkg signature check"
+sed -i 's/option check_signature/# option check_signature/g' /etc/opkg.conf
+
+# Step 3: Remove login password required when accessing terminal
+msg "Step 3: Remove login password required when accessing terminal"
+uci set ttyd.@ttyd[0].command='/bin/bash --login'
+uci commit ttyd
+
+# Step 4: Setup PHP
+msg "Step 4: Setup PHP"
+msg "system not using php-cgi, patching php config ..."
+uci set uhttpd.main.ubus_prefix='/ubus'
+uci set uhttpd.main.interpreter='.php=/usr/bin/php-cgi'
+uci set uhttpd.main.index_page='cgi-bin/luci'
+uci add_list uhttpd.main.index_page='index.html'
+uci add_list uhttpd.main.index_page='index.php'
+uci commit uhttpd
+sed -i -E "s|memory_limit = [0-9]+M|memory_limit = 100M|g" /etc/php.ini
+sed -i -E "s|display_errors = On|display_errors = Off|g" /etc/php.ini
+ln -s /usr/bin/php-cli /usr/bin/php
+[ -d /usr/lib/php8 ] && [ ! -d /usr/lib/php ] && ln -sf /usr/lib/php8 /usr/lib/php
+msg "patching system with php configuration done ..."
+msg "restarting uhttpd ..."
+/etc/init.d/uhttpd restart
+
+
+# Step 5: Setting Tinyfm
+msg "Step 5: Setting Tinyfm"
+ln -s / /www/tinyfm/rootfs
+
+# Step 6: Set All permission files
+msg "Step 6: Set All permission files"
+check_permission() {
+    local DIR=${1:-.}
+
+    find "$DIR" -type f | while read file; do
+        if file "$file" | grep -q "executable"; then
+            if [ ! -x "$file" ]; then
+                msg "File requiring chmod +x: $file"
+                chmod +x "$file"
+            fi
+        fi
+    done
+}
+
+check_permission "/sbin"
+check_permission "/usr/bin"
+
+# Log success
+msg "First Setup settings successfully applied..."
+
+# Remove this script after successful execution
+rm -f /etc/uci-defaults/$(basename $0)
