@@ -21,7 +21,10 @@ PACKAGES=""
     PACKAGES="$PACKAGES coreutils-nohup bash dnsmasq-full curl ca-certificates ipset ip-full libcap libcap-bin ruby ruby-yaml kmod-tun kmod-inet-diag unzip kmod-nft-tproxy luci-compat luci luci-base luci-app-openclash"
     
     # NAS and Hard disk tools
-    PACKAGES="$PACKAGES kmod-usb-storage kmod-usb-storage-uas ntfs-3g"
+    PACKAGES="$PACKAGES luci-app-diskman kmod-usb-storage kmod-usb-storage-uas ntfs-3g"
+    
+    # Bandwidth And Network Monitoring
+    PACKAGES+=" internet-detector luci-app-internet-detector internet-detector-mod-modem-restart vnstat2 vnstati2 luci-app-vnstat2"
     
     # Speedtest
     PACKAGES="$PACKAGES iperf3"
@@ -40,9 +43,11 @@ PACKAGES=""
     PACKAGES="$PACKAGES kmod-iwlwifi iw-full pciutils"
     
     # misc
-    PACKAGES="$PACKAGES zram-swap adb parted losetup resize2fs luci luci-ssl block-mount htop bash curl wget wget-ssl tar unzip unrar gzip jq luci-app-ttyd nano httping screen openssh-sftp-server"
+    PACKAGES="$PACKAGES zram-swap adb parted losetup resize2fs luci luci-ssl block-mount luci-app-ramfree htop bash curl wget wget-ssl tar unzip unrar gzip jq luci-app-ttyd nano httping screen openssh-sftp-server"
     
     PACKAGES="$PACKAGES -kmod-usb-net-rtl8152-vendor -procd-ujail -libgd -dnsmasq -automount -libustream-openssl -default-settings-chn -luci-i18n-base-zh-cn"
+    
+    PACKAGES="$PACKAGES luci-app-temp-status"
 
 # Files directory for custom configurations or files
 FILES="files"

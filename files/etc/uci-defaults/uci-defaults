@@ -11,7 +11,7 @@ msg() {
 
 # Set hostname and Timezone to Asia/Jakarta
 msg "Setup NTP Server and Time Zone to Asia/Jakarta"
-uci set system.@system[0].hostname='RTA-WRT'
+uci set system.@system[0].hostname='OpenWrt'
 uci set system.@system[0].timezone='WIB-7'
 uci set system.@system[0].zonename='Asia/Jakarta'
 uci -q delete system.ntp.server
@@ -59,8 +59,31 @@ msg "Step 3: Remove login password required when accessing terminal"
 uci set ttyd.@ttyd[0].command='/bin/bash --login'
 uci commit ttyd
 
-# Step 4: Setup PHP
-msg "Step 4: Setup PHP"
+
+# Step 4: Remove huawei me909s usb-modeswitch
+msg "Step 4: Remove huawei me909s usb-modeswitch"
+sed -i -e '/12d1:15c1/,+5d' /etc/usb-mode.json
+
+
+# Step 5: Remove dw5821e usb-modeswitch
+msg "Step 5: Remove dw5821e usb-modeswitch"
+sed -i -e '/413c:81d7/,+5d' /etc/usb-mode.json
+
+
+# Step 6: Disable /etc/config/xmm-modem
+msg "Step 6: Disable /etc/config/xmm-modem"
+uci set xmm-modem.@xmm-modem[0].enable='0'
+uci commit xmm-modem
+
+# Step 8: Setup Auto Vnstat Database Backup
+msg "Step 8: Setup Auto Vnstat Database Backup"
+sed -i 's/;DatabaseDir "\/var\/lib\/vnstat"/DatabaseDir "\/etc\/vnstat"/' /etc/vnstat.conf
+mkdir -p /etc/vnstat
+chmod +x /etc/init.d/vnstat_backup
+bash /etc/init.d/vnstat_backup enable
+
+# Step 12: Setup PHP
+msg "Step 12: Setup PHP"
 msg "system not using php-cgi, patching php config ..."
 uci set uhttpd.main.ubus_prefix='/ubus'
 uci set uhttpd.main.interpreter='.php=/usr/bin/php-cgi'
@@ -76,13 +99,12 @@ msg "patching system with php configuration done ..."
 msg "restarting uhttpd ..."
 /etc/init.d/uhttpd restart
 
-
-# Step 5: Setting Tinyfm
-msg "Step 5: Setting Tinyfm"
+# Step 13: Setting Tinyfm
+msg "Step 13: Setting Tinyfm"
 ln -s / /www/tinyfm/rootfs
 
-# Step 6: Set All permission files
-msg "Step 6: Set All permission files"
+# Step 16: Set All permission files
+msg "Step 16: Set All permission files"
 check_permission() {
     local DIR=${1:-.}
 
@@ -96,6 +118,7 @@ check_permission() {
     done
 }
 
+check_permission "/etc/init.d"
 check_permission "/sbin"
 check_permission "/usr/bin"
 
