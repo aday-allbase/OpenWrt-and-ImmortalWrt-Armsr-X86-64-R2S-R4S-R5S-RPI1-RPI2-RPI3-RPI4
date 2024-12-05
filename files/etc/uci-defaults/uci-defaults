@@ -75,15 +75,15 @@ msg "Step 6: Disable /etc/config/xmm-modem"
 uci set xmm-modem.@xmm-modem[0].enable='0'
 uci commit xmm-modem
 
-# Step 8: Setup Auto Vnstat Database Backup
-msg "Step 8: Setup Auto Vnstat Database Backup"
+# Step 7: Setup Auto Vnstat Database Backup
+msg "Step 7: Setup Auto Vnstat Database Backup"
 sed -i 's/;DatabaseDir "\/var\/lib\/vnstat"/DatabaseDir "\/etc\/vnstat"/' /etc/vnstat.conf
 mkdir -p /etc/vnstat
 chmod +x /etc/init.d/vnstat_backup
 bash /etc/init.d/vnstat_backup enable
 
-# Step 12: Setup PHP
-msg "Step 12: Setup PHP"
+# Step 8: Setup PHP
+msg "Step 8: Setup PHP"
 msg "system not using php-cgi, patching php config ..."
 uci set uhttpd.main.ubus_prefix='/ubus'
 uci set uhttpd.main.interpreter='.php=/usr/bin/php-cgi'
@@ -99,12 +99,12 @@ msg "patching system with php configuration done ..."
 msg "restarting uhttpd ..."
 /etc/init.d/uhttpd restart
 
-# Step 13: Setting Tinyfm
-msg "Step 13: Setting Tinyfm"
+# Step 9: Setting Tinyfm
+msg "Step 9: Setting Tinyfm"
 ln -s / /www/tinyfm/rootfs
 
-# Step 16: Set All permission files
-msg "Step 16: Set All permission files"
+# Step 10: Set All permission files
+msg "Step 10: Set All permission files"
 check_permission() {
     local DIR=${1:-.}
 
