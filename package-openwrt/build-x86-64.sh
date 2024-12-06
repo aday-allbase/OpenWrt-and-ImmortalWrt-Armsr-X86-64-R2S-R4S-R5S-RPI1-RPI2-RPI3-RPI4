@@ -18,7 +18,7 @@ PACKAGES=""
     kmod-phy-broadcom kmod-phylib-broadcom kmod-tg3"
 
     # Tunnel option
-    PACKAGES="$PACKAGES coreutils-nohup bash iptables dnsmasq-full curl ca-certificates ipset ip-full iptables-mod-tproxy iptables-mod-extra libcap libcap-bin ruby ruby-yaml kmod-tun kmod-inet-diag unzip luci-compat luci luci-base luci-app-openclash"
+    PACKAGES="$PACKAGES coreutils-nohup bash iptables dnsmasq-full curl ca-certificates ipset ip-full iptables-mod-tproxy iptables-mod-extra libcap libcap-bin ruby ruby-yaml kmod-tun unzip luci-compat luci luci-base luci-app-openclash"
     
     # NAS and Hard disk tools
     PACKAGES="$PACKAGES kmod-usb-storage kmod-usb-storage-uas ntfs-3g"
