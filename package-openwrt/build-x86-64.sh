@@ -43,7 +43,7 @@ PACKAGES=""
     PACKAGES="$PACKAGES kmod-iwlwifi iw-full pciutils"
     
     # misc
-    PACKAGES="$PACKAGES zram-swap adb parted losetup resize2fs luci luci-ssl block-mount htop bash curl wget wget-ssl tar unzip unrar gzip jq luci-app-ttyd nano httping screen openssh-sftp-server"
+    PACKAGES="$PACKAGES zram-swap adb parted losetup resize2fs luci luci-ssl htop bash curl wget wget-ssl tar unzip unrar gzip jq luci-app-ttyd nano httping screen openssh-sftp-server"
     
     PACKAGES="$PACKAGES -kmod-usb-net-rtl8152-vendor -procd-ujail -libgd -dnsmasq -automount -libustream-openssl -default-settings-chn -luci-i18n-base-zh-cn"
     
