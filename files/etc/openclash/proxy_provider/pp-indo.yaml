@@ -1,0 +1,67 @@
+proxies:
+  - name: vvip-aday647321
+    server: waves.digitalocean.com
+    port: 443
+    type: vmess
+    uuid: 9b7ed73e-b61f-4ee4-8e2b-4550f8e71e2d
+    alterId: 0
+    cipher: auto
+    tls: true
+    skip-cert-verify: true
+    servername: id2ray.jagoan.vip
+    network: ws
+    ws-opts:
+      path: /vvip
+      headers:
+        Host: id2ray.jagoan.vip
+    udp: true
+
+  - name: Herza(ID)
+    server: waves.digitalocean.com
+    port: 443
+    type: vless
+    uuid: 4bd7fa96-cbf6-4413-8223-4d2955faf133
+    cipher: auto
+    tls: true
+    skip-cert-verify: true
+    servername: waves.digitalocean.com.tunnel.aday.my.id
+    network: ws
+    ws-opts:
+      path: /id15
+      headers:
+        Host: waves.digitalocean.com.tunnel.aday.my.id
+    udp: true
+
+  - name: Aksimaya(ID)
+    server: waves.digitalocean.com
+    port: 443
+    type: vless
+    uuid: 4bd7fa96-cbf6-4413-8223-4d2955faf133
+    cipher: auto
+    tls: true
+    skip-cert-verify: true
+    servername: waves.digitalocean.com.tunnel.aday.my.id
+    network: ws
+    ws-opts:
+      path: /id14
+      headers:
+        Host: waves.digitalocean.com.tunnel.aday.my.id
+    udp: true
+
+#
+
+  - name: Tencent(ID)
+    server: waves.digitalocean.com
+    port: 443
+    type: vless
+    uuid: 7794dffb-5de7-4d70-9ca2-fe16a132a84b
+    cipher: auto
+    tls: true
+    skip-cert-verify: true
+    servername: xray.xrayall.workers.dev
+    network: ws
+    ws-opts:
+      path: /id8
+      headers:
+        Host: xray.xrayall.workers.dev
+    udp: true
