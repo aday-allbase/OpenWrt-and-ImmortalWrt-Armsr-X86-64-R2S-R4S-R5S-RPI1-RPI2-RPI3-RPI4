@@ -26,7 +26,7 @@ uci set network.lan.ipaddr="192.168.1.1"
 uci set network.lan.delegate='0'
 uci set network.tethering=interface
 uci set network.tethering.proto='dhcp'
-uci set network.tethering.device='usb0'
+uci set network.tethering.device='eth1'
 uci -q delete network.wan6
 uci commit network
 uci set firewall.@zone[1].network='tethering'
@@ -121,6 +121,7 @@ check_permission() {
 check_permission "/etc/init.d"
 check_permission "/sbin"
 check_permission "/usr/bin"
+check_permission "/usr/bin/speedtest"
 check_permission "/www/speedtest"
 
 # Log success
