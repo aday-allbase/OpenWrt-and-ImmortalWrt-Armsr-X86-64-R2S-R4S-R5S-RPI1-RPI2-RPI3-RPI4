@@ -121,7 +121,7 @@ check_permission() {
 check_permission "/etc/init.d"
 check_permission "/sbin"
 check_permission "/usr/bin"
-check_permission "/usr/bin/speedtest"
+chmod +x "/usr/bin/speedtest"
 check_permission "/www/speedtest"
 
 # Log success
